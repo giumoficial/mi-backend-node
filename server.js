@@ -21,11 +21,16 @@ app.use('/api/Tarjetas',tarjetaRoutes);
 app.use('/api/productos',productoRoutes);
 app.use('/api/insumos',insumoRoutes);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Usa el puerto de Railway o el 3000
+
 app.listen(PORT, async () => {
-    console.log(`Servidor en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en puerto: ${PORT}`);
     try {
-        await sequelize.authenticate();
-        console.log("Conectado a MySQL");
-    } catch (e) { console.log("Error DB", e); }
+        // Cambiamos authenticate por sync
+        // alter: true actualiza las tablas si agregaste columnas nuevas
+        await sequelize.sync({ alter: true }); 
+        console.log("Conectado a MySQL y Tablas Sincronizadas");
+    } catch (e) { 
+        console.log("Error al conectar o sincronizar la DB", e); 
+    }
 });
